@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emails</title>
+</head>
+<body>
+    <h1>Emails</h1>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>Subject</th>
+            <th>Sender</th>
+            <th>Date</th>
+            <th>ZIP File</th>
+            <th>View PDF</th>
+        </tr>
+        {% for email in emails %}
+        <tr>
+            <td>{{ email.id}}</td>
+            <td>{{ email.subject }}</td>
+            <td>{{ email.sender }}</td>
+            <td>{{ email.date }}</td>
+            <td>
+                {% if email.zip_file %}
+                    <a href="{% url 'download_zip' email.id %}">Download ZIP</a>
+                {% else %}
+                    No ZIP file
+                {% endif %}
+            </td>
+            <td>
+                {% if email.zip_file %}
+                    <a href="{% url 'view_pdf' email.id %}" target="_blank">View PDF</a>
+                {% else %}
+                    No PDF file
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

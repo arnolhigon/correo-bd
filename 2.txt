@@ -1,0 +1,110 @@
+hasme una suma de dos numeros 
+
+en django python 
+
+y aplicale un metodo asincrono para que se ejecute cada 10 segundos
+hazlo con 
+pip install apscheduler
+
+el proyecto se llama
+sistema y la app se llama correo
+ChatGPT
+Para crear una aplicación Django que sume dos números de manera asincrónica cada 10 segundos usando apscheduler, sigue los siguientes pasos:
+
+Paso 1: Crear el Proyecto Django
+Abre tu terminal y navega al directorio donde deseas crear el proyecto.
+
+Crea el proyecto llamado sistema:
+
+sh
+Copiar código
+django-admin startproject sistema
+Navega al directorio del proyecto:
+
+sh
+Copiar código
+cd sistema
+Crea la aplicación llamada correo:
+
+sh
+Copiar código
+python manage.py startapp correo
+Paso 2: Configurar el Proyecto
+Abre el archivo sistema/settings.py y agrega correo a la lista INSTALLED_APPS:
+
+python
+Copiar código
+INSTALLED_APPS = [
+    ...
+    'correo',
+]
+Paso 3: Instalar apscheduler
+Instala apscheduler usando pip:
+
+sh
+Copiar código
+pip install apscheduler
+Paso 4: Crear la Función de Suma en la Aplicación
+En el archivo correo/tasks.py, define la función para sumar dos números:
+
+python
+Copiar código
+def sumar_numeros(a, b):
+    suma = a + b
+    print(f"La suma de {a} y {b} es {suma}")
+    return suma
+Paso 5: Configurar apscheduler
+Crea un archivo correo/scheduler.py y configura el trabajo programado:
+
+python
+Copiar código
+from apscheduler.schedulers.background import BackgroundScheduler
+from .tasks import sumar_numeros
+
+def start():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(sumar_numeros, 'interval', seconds=10, args=[5, 3])
+    scheduler.start()
+Paso 6: Inicializar el Scheduler en apps.py
+Abre correo/apps.py y modifica la clase CorreoConfig para iniciar el scheduler cuando la aplicación esté lista:
+
+python
+Copiar código
+from django.apps import AppConfig
+
+class CorreoConfig(AppConfig):
+    name = 'correo'
+
+    def ready(self):
+        from .scheduler import start
+        start()
+Paso 7: Ejecutar el Proyecto
+Ejecuta el servidor de desarrollo de Django:
+
+sh
+Copiar código
+python manage.py runserver
+Cada 10 segundos, se ejecutará la función sumar_numeros y mostrará el resultado en la consola.
+
+Resumen de la Estructura de Archivos:
+markdown
+Copiar código
+sistema/
+├── correo/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations/
+│   ├── models.py
+│   ├── tasks.py
+│   ├── scheduler.py
+│   ├── tests.py
+│   └── views.py
+├── sistema/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── manage.py
+Con estos pasos, habrás configurado una tarea asincrónica en tu aplicación Django que suma dos números cada 10 segundos usando apscheduler.
